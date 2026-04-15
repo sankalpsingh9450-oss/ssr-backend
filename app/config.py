@@ -29,6 +29,14 @@ class Settings(BaseSettings):
     # WhatsApp
     WHATSAPP_PHONE: str = "918796138550"
 
+    # HubSpot CRM
+    HUBSPOT_ACCESS_TOKEN: str = ""
+    HUBSPOT_BASE_URL: str = "https://api.hubapi.com"
+    HUBSPOT_LIFECYCLE_STAGE: str = "lead"
+    HUBSPOT_LEAD_STATUS: str = "NEW"
+    HUBSPOT_FORM_TYPE_PROPERTY: str = ""
+    HUBSPOT_DETAILS_PROPERTY: str = ""
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]

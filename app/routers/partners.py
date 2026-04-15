@@ -4,6 +4,7 @@ from app.database import get_db
 from app.models.submissions import PartnerRegistration
 from app.schemas import PartnerRegistrationRequest, SuccessResponse
 from app.services.email_service import send_email_notification, build_submission_email
+from app.services.hubspot_service import sync_hubspot_contact
 
 router = APIRouter(prefix="/partners", tags=["Partner Registration"])
 
@@ -33,6 +34,21 @@ async def register_partner(
         send_email_notification,
         subject=f"🤝 New Partner: {data.business_name} ({data.category})",
         body_html=email_html,
+    )
+    background_tasks.add_task(
+        sync_hubspot_contact,
+        email=data.email,
+        phone=data.phone,
+        full_name=data.contact_person,
+        company=data.business_name,
+        city=data.city,
+        lead_type="partner_registration",
+        details={
+            "business_name": data.business_name,
+            "category": data.category,
+            "city": data.city,
+            "description": data.description,
+        },
     )
 
     return SuccessResponse(

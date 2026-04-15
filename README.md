@@ -229,6 +229,19 @@ Use **Nginx** as a reverse proxy in front of Gunicorn.
 3. Set environment variables from `.env.example`
 4. Deploy — it auto-detects Python + FastAPI
 
+### Optional: HubSpot CRM Sync
+
+If you want every form submission to also create or update a HubSpot contact:
+
+1. Create a HubSpot private app
+2. Copy its access token
+3. Add `HUBSPOT_ACCESS_TOKEN` in Railway
+4. Optionally add custom HubSpot contact property names:
+   `HUBSPOT_FORM_TYPE_PROPERTY`
+   `HUBSPOT_DETAILS_PROPERTY`
+
+The backend will continue saving leads locally even if HubSpot sync is not configured or temporarily fails.
+
 ### Switch to PostgreSQL for Production
 
 ```env

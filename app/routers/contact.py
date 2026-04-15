@@ -4,6 +4,7 @@ from app.database import get_db
 from app.models.submissions import ContactSubmission
 from app.schemas import ContactRequest, SuccessResponse
 from app.services.email_service import send_email_notification, build_submission_email
+from app.services.hubspot_service import sync_hubspot_contact
 
 router = APIRouter(prefix="/contact", tags=["Contact"])
 
@@ -32,6 +33,17 @@ async def submit_contact(
         send_email_notification,
         subject=f"📩 New Contact: {data.subject} — {data.name}",
         body_html=email_html,
+    )
+    background_tasks.add_task(
+        sync_hubspot_contact,
+        email=data.email,
+        phone=data.phone,
+        full_name=data.name,
+        lead_type="contact",
+        details={
+            "subject": data.subject,
+            "message": data.message,
+        },
     )
 
     return SuccessResponse(

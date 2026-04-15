@@ -4,6 +4,7 @@ from app.database import get_db
 from app.models.submissions import PropertyFinderSubmission
 from app.schemas import PropertyFinderRequest, SuccessResponse
 from app.services.email_service import send_email_notification, build_submission_email
+from app.services.hubspot_service import sync_hubspot_contact
 
 router = APIRouter(prefix="/property-finder", tags=["Property Finder"])
 
@@ -41,6 +42,20 @@ async def submit_property_request(
         send_email_notification,
         subject=f"🏠 Property Request: {data.property_type} — {data.name}",
         body_html=email_html,
+    )
+    background_tasks.add_task(
+        sync_hubspot_contact,
+        email=data.email,
+        phone=data.phone,
+        full_name=data.name,
+        lead_type="property_finder",
+        details={
+            "property_type": data.property_type,
+            "budget_min": data.budget_min,
+            "budget_max": data.budget_max,
+            "preferred_location": data.preferred_location,
+            "requirements": data.requirements,
+        },
     )
 
     return SuccessResponse(
