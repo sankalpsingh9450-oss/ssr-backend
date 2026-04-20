@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any
 
 
 # ── Contact Form ───────────────────────────────────────
@@ -121,3 +121,20 @@ class SuccessResponse(BaseModel):
     success: bool = True
     message: str
     data: Optional[dict] = None
+
+
+# ── Chatbot ───────────────────────────────────────────
+
+class ChatLeadRequest(BaseModel):
+    name: str = Field(..., min_length=2, max_length=150)
+    email: EmailStr
+    phone: str = Field(..., max_length=20)
+    service_interest: str = Field(..., min_length=2, max_length=120)
+    source: str = Field(default="chatbot", max_length=30)
+    language: Optional[str] = Field(default="en", max_length=10)
+    notes: Optional[str] = Field(default=None, max_length=4000)
+
+
+class ChatTranscriptRequest(BaseModel):
+    email: EmailStr
+    messages: list[dict[str, Any]] = Field(default_factory=list)

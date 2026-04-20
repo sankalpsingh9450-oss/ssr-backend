@@ -13,6 +13,7 @@ from app.routers import (
     partners_router,
     quote_router,
     admin_router,
+    chatbot_router,
 )
 
 settings = get_settings()
@@ -77,6 +78,7 @@ app.include_router(materials_router, prefix=API_PREFIX)
 app.include_router(partners_router, prefix=API_PREFIX)
 app.include_router(quote_router, prefix=API_PREFIX)
 app.include_router(admin_router, prefix=API_PREFIX)
+app.include_router(chatbot_router, prefix=API_PREFIX)
 
 
 @app.get("/")

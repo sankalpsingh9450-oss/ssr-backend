@@ -38,6 +38,11 @@ class QuoteType(str, enum.Enum):
     FULL_BOQ = "Full BOQ"
 
 
+class ChatLeadSource(str, enum.Enum):
+    CHATBOT = "chatbot"
+    CALLBACK = "callback"
+
+
 # ── Models ─────────────────────────────────────────────
 
 class ContactSubmission(Base):
@@ -108,4 +113,18 @@ class QuoteBOQRequest(Base):
     location = Column(String(255), nullable=True)
     floors = Column(String(20), nullable=True)
     details = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class ChatLeadSubmission(Base):
+    __tablename__ = "chat_lead_submissions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(150), nullable=False)
+    email = Column(String(255), nullable=False)
+    phone = Column(String(20), nullable=False)
+    service_interest = Column(String(120), nullable=False)
+    source = Column(String(30), nullable=False, default=ChatLeadSource.CHATBOT.value)
+    language = Column(String(10), nullable=True)
+    notes = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

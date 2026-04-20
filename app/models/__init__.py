@@ -4,6 +4,7 @@ from app.models.submissions import (
     MaterialEnquiry,
     PartnerRegistration,
     QuoteBOQRequest,
+    ChatLeadSubmission,
 )
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     "MaterialEnquiry",
     "PartnerRegistration",
     "QuoteBOQRequest",
+    "ChatLeadSubmission",
 ]

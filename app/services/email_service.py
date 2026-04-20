@@ -75,3 +75,41 @@ def build_submission_email(form_name: str, fields: dict) -> str:
         </p>
     </div>
     """
+
+
+def build_transcript_email(messages: list[dict], recipient_email: str) -> str:
+    """Build a simple conversation transcript email for chatbot sessions."""
+    rows = ""
+    for message in messages:
+        role = (message.get("role") or "bot").title()
+        text = (message.get("text") or "").replace("\n", "<br/>")
+        timestamp = message.get("timestamp") or "—"
+        rows += f"""
+        <tr>
+            <td style="padding:12px 14px;font-weight:600;color:#374151;
+                        background:#f9fafb;border-bottom:1px solid #e5e7eb;
+                        width:18%;vertical-align:top;">{role}</td>
+            <td style="padding:12px 14px;color:#1f2937;border-bottom:1px solid #e5e7eb;">
+                <div style="font-size:12px;color:#6b7280;margin-bottom:4px;">{timestamp}</div>
+                <div>{text or '—'}</div>
+            </td>
+        </tr>"""
+
+    return f"""
+    <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:680px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:24px 30px;
+                     border-radius:8px 8px 0 0;">
+            <h1 style="color:#fff;margin:0;font-size:20px;">💬 SSR Group Chat Transcript</h1>
+            <p style="color:#bfdbfe;margin:6px 0 0;font-size:14px;">
+                Sent to {recipient_email}
+            </p>
+        </div>
+        <div style="border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;
+                     overflow:hidden;">
+            <table style="width:100%;border-collapse:collapse;">{rows}</table>
+        </div>
+        <p style="text-align:center;color:#9ca3af;font-size:12px;margin-top:16px;">
+            Generated from the SSR Group Civil website chatbot
+        </p>
+    </div>
+    """
